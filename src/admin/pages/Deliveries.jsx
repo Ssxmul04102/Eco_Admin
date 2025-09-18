@@ -1,36 +1,143 @@
+// Deliveries.jsx
+import React, { useState, useEffect } from "react";
+import {
+  getDeliveries,
+  createDelivery,
+  updateDelivery,
+  deleteDelivery,
+} from "../services/deliveriesService";
+
 export default function Deliveries() {
-  const deliveries = [
-    { id: 1, order: "#1001", deliveryPerson: "Luis Gómez", status: "En camino" },
-    { id: 2, order: "#1002", deliveryPerson: "Ana Martínez", status: "Entregado" },
-  ];
+  const [deliveries, setDeliveries] = useState([]);
+  const [form, setForm] = useState({ id: null, orderId: "", deliveryPerson: "", status: "Pendiente" });
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    setDeliveries(getDeliveries());
+  }, []);
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.orderId || !form.deliveryPerson) return;
+
+    const payload = { orderId: form.orderId, deliveryPerson: form.deliveryPerson, status: form.status };
+
+    if (isEditing) {
+      updateDelivery(form.id, payload);
+      setIsEditing(false);
+    } else {
+      createDelivery(payload);
+    }
+
+    setForm({ id: null, orderId: "", deliveryPerson: "", status: "Pendiente" });
+    setDeliveries(getDeliveries());
+  };
+
+  const handleEdit = (d) => {
+    setForm({ id: d.id, orderId: d.orderId, deliveryPerson: d.deliveryPerson, status: d.status });
+    setIsEditing(true);
+  };
+
+  const handleDelete = (id) => {
+    deleteDelivery(id);
+    setDeliveries(getDeliveries());
+  };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Gestión de Domicilios</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-md text-white">
-          <thead>
-            <tr className="bg-white/20">
-              <th className="px-6 py-3 text-left">ID</th>
-              <th className="px-6 py-3 text-left">Pedido</th>
-              <th className="px-6 py-3 text-left">Repartidor</th>
-              <th className="px-6 py-3 text-left">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {deliveries.map((delivery) => (
-              <tr
-                key={delivery.id}
-                className="hover:bg-white/20 transition"
-              >
-                <td className="px-6 py-4">{delivery.id}</td>
-                <td className="px-6 py-4">{delivery.order}</td>
-                <td className="px-6 py-4">{delivery.deliveryPerson}</td>
-                <td className="px-6 py-4">{delivery.status}</td>
+    <div className="p-6 space-y-6">
+      {/* ENCABEZADO */}
+      <div className="glass-container text-white">
+        <h2 className="text-3xl font-bold">Gestión de Domicilios</h2>
+        <p className="text-sm text-white/70">Administra los repartos y su estado</p>
+      </div>
+
+      {/* FORMULARIO */}
+      <div className="glass-container">
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-4 items-center">
+          <input
+            type="text"
+            name="orderId"
+            placeholder="ID del Pedido"
+            value={form.orderId}
+            onChange={handleChange}
+            className="flex-1 min-w-[180px] p-2 rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/60 focus:outline-none"
+          />
+          <input
+            type="text"
+            name="deliveryPerson"
+            placeholder="Repartidor"
+            value={form.deliveryPerson}
+            onChange={handleChange}
+            className="flex-1 min-w-[180px] p-2 rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/60 focus:outline-none"
+          />
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            className="flex-1 min-w-[140px] p-2 rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/60 focus:outline-none"
+          >
+            <option value="Pendiente">Pendiente</option>
+            <option value="En camino">En camino</option>
+            <option value="Entregado">Entregado</option>
+          </select>
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-[#00C9A7] to-[#7D5FFF] text-white px-6 py-2 rounded-lg hover:opacity-90 transition"
+          >
+            {isEditing ? "Actualizar" : "Agregar"}
+          </button>
+        </form>
+      </div>
+
+      {/* TABLA */}
+      <div className="glass-container">
+        <div className="overflow-x-auto">
+          <table className="w-full rounded-xl overflow-hidden">
+            <thead>
+              <tr className="bg-gradient-to-r from-[#00C9A7] to-[#7D5FFF] text-white">
+                <th className="p-3">ID</th>
+                <th className="p-3">Pedido</th>
+                <th className="p-3">Repartidor</th>
+                <th className="p-3">Estado</th>
+                <th className="p-3">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {deliveries.length > 0 ? (
+                deliveries.map((d) => (
+                  <tr key={d.id} className="hover:bg-white/20 transition text-white">
+                    <td className="p-3 text-center">{d.id}</td>
+                    <td className="p-3">{d.orderId}</td>
+                    <td className="p-3">{d.deliveryPerson}</td>
+                    <td className="p-3">{d.status}</td>
+                    <td className="p-3 flex justify-center gap-2">
+                      <button
+                        onClick={() => handleEdit(d)}
+                        className="px-3 py-1 rounded-lg border border-blue-400 text-blue-400 hover:bg-blue-500 hover:text-white transition"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleDelete(d.id)}
+                        className="px-3 py-1 rounded-lg border border-red-400 text-red-400 hover:bg-red-500 hover:text-white transition"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-4 text-gray-300">
+                    No hay domicilios registrados
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

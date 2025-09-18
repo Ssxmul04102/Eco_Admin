@@ -21,11 +21,12 @@
 
 /* glass container for the content area */
 .glass-container {
-  background: rgba(255,255,255,0.06);      /* baja opacidad para ver fondo */
+  background: rgba(255, 255, 255, 0.06); /* Fondo translúcido */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(2,6,23,0.18);
-  min-height: 80vh;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.18);
+  padding: 1rem;
+  transition: all 0.3s ease-in-out;
 }

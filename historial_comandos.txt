@@ -1,0 +1,5 @@
+  204  npm install
+  205  npm run dev
+  206  npm run dev
+  207  history
+  208  history > historial_comandos.txt
