@@ -1,7 +1,8 @@
 // src/admin/services/usersService.js
 let users = [
-  { id: 1, name: "Johan Castillo", email: "johan@example.com", role: "Cliente" },
-  { id: 2, name: "Emmanuel Torres", email: "emmanuel@example.com", role: "Administrador" },
+  { id: 1, name: "Johan Castillo", email: "johan@gmailcom", role: "Adminstrador" },
+  { id: 2, name: "Emmanuel Piñeros", email: "emmanuel@gmail.com", role: "Administrador" },
+  { id: 2, name: "JuanJose Forero", email: "jujofoca@gmail.com", role: "Administrador" },
 ];
 
 // Obtener todos los usuarios
