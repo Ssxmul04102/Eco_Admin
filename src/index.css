@@ -11,22 +11,3 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-/* .animated-bg se usa en <main> para dar movimiento sutil al fondo */
-.animated-bg {
-  background: linear-gradient(135deg, #00c9a7 0%, #4375b2 50%, #7d5fff 100%);
-  background-size: 300% 300%;
-  animation: bgMove 18s ease infinite;
-}
-
-/* glass container for the content area */
-.glass-container {
-  background: rgba(255, 255, 255, 0.06); /* Fondo translúcido */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.18);
-  padding: 1rem;
-  transition: all 0.3s ease-in-out;
-}

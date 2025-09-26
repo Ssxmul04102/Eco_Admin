@@ -13,105 +13,90 @@ import {
 export default function Sidebar({ isOpen, toggle, isMobile, closeMobile }) {
   return (
     <div
-      className="h-full flex flex-col text-white justify-between"
-      style={{
-        background: "linear-gradient(180deg,#00C9A7 0%, #4375b2 50%, #7D5FFF 100%)",
-        boxShadow: "rgba(2,6,23,0.2) 0px 10px 30px",
-        overflow: "hidden",
-        height: "100vh",
-      }}
+      className={`h-full flex flex-col justify-between transition-all duration-500 
+                  ${isOpen ? "w-64" : "w-20"} relative`}
     >
+      {/* ---------- EFECTO LIQUID GLASS EN FONDO ---------- */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-purple-600 via-blue-600 to-teal-400 opacity-70" />
+      <div className="absolute inset-0 -z-10 backdrop-blur-2xl bg-white/10" />
+      <div className="absolute inset-0 -z-10 shadow-[inset_1px_1px_8px_rgba(255,255,255,0.4),0_8px_30px_rgba(0,0,0,0.4)]" />
+
       {/* ---------- HEADER CON LOGO ---------- */}
-      <div className="flex items-center justify-between p-4 border-b border-white/10">
+      <div className="flex items-center justify-between p-4 border-b border-white/20">
         <div className="flex items-center gap-3">
           <img
             src="/src/assets/EcoEnergixLog.png"
             alt="EcoEnergix"
-            className="object-contain cursor-pointer"
+            className="object-contain cursor-pointer drop-shadow-md hover:scale-110 transition-transform"
             style={{ width: 40, height: 40 }}
             onClick={toggle}
-            title={isOpen ? "Colapsar" : "Expandir"}
+            title={isOpen ? "Colapsar menú" : "Expandir menú"}
           />
-          {isOpen && <span className="font-extrabold text-lg">EcoEnergix</span>}
+          {isOpen && (
+            <span className="font-extrabold text-lg text-white drop-shadow-sm">
+              EcoEnergix
+            </span>
+          )}
         </div>
       </div>
 
-      {/* ---------- MENÚ PRINCIPAL CENTRADO ---------- */}
+      {/* ---------- MENÚ PRINCIPAL ---------- */}
       <nav className="flex-1 flex items-center justify-center">
         <ul className="space-y-2 w-full px-4">
-          <li>
-            <Link
-              to="/"
-              onClick={() => isMobile && closeMobile()}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition"
-            >
-              <Home size={20} />
-              {isOpen && <span>Bienvenida</span>}
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/usuarios"
-              onClick={() => isMobile && closeMobile()}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition"
-            >
-              <UsersIcon size={20} />
-              {isOpen && <span>Usuarios</span>}
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/productos"
-              onClick={() => isMobile && closeMobile()}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition"
-            >
-              <Package size={20} />
-              {isOpen && <span>Productos</span>}
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/pedidos"
-              onClick={() => isMobile && closeMobile()}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition"
-            >
-              <ShoppingCart size={20} />
-              {isOpen && <span>Pedidos</span>}
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/domicilios"
-              onClick={() => isMobile && closeMobile()}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition"
-            >
-              <Truck size={20} />
-              {isOpen && <span>Domicilios</span>}
-            </Link>
-          </li>
+          {[
+            { to: "/", label: "Bienvenida", Icon: Home },
+            { to: "/usuarios", label: "Usuarios", Icon: UsersIcon },
+            { to: "/productos", label: "Productos", Icon: Package },
+            { to: "/pedidos", label: "Pedidos", Icon: ShoppingCart },
+            { to: "/domicilios", label: "Domicilios", Icon: Truck },
+          ].map(({ to, label, Icon }) => (
+            <li key={to}>
+              <Link
+                to={to}
+                onClick={() => isMobile && closeMobile()}
+                className="group flex items-center gap-3 p-3 rounded-xl 
+                           text-white font-medium
+                           hover:bg-white/10 hover:backdrop-blur-md
+                           transition-all duration-300"
+              >
+                <Icon
+                  size={22}
+                  className="drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)] 
+                             group-hover:text-teal-300 transition-colors duration-300"
+                />
+                {isOpen && (
+                  <span className="group-hover:text-teal-300 transition-colors duration-300">
+                    {label}
+                  </span>
+                )}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
 
       {/* ---------- SECCIÓN INFERIOR ---------- */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-white/20">
         {/* Botón cerrar sesión */}
         <button
           onClick={() => alert("Cerrar sesión")}
-          className="w-full flex items-center gap-3 p-3 mb-3 rounded-lg hover:bg-red-500/20 transition text-white"
+          className="w-full flex items-center gap-3 p-3 mb-3 rounded-xl 
+                     text-white font-medium
+                     hover:bg-red-500/30 hover:backdrop-blur-md
+                     transition-all duration-300"
         >
-          <LogOut size={20} />
+          <LogOut
+            size={22}
+            className="group-hover:text-red-300 transition-colors duration-300"
+          />
           {isOpen && <span>Cerrar sesión</span>}
         </button>
 
         {/* Copyright */}
         {isOpen ? (
-          <div className="text-sm text-white/90">© 2025 EcoEnergix</div>
+          <div className="text-sm text-white/80">© 2025 EcoEnergix</div>
         ) : (
-          <div className="text-xs text-white/60">© 2025</div>
+          <div className="text-xs text-white/60 text-center">© 2025</div>
         )}
       </div>
     </div>
